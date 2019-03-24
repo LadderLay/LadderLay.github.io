@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LadderLay">
 <meta property="og:description" content="概念导入 同步与异步 简单来说，同步就是一次只能做一件事，等前一件做完了才能做下一件事。异步与同步相对，当一个异步过程调用发出后，调用者在没有得到结果之前，就可以继续执行后续操作。 一个愚蠢的小例子2333:比如你在使用支付宝的时候，想给你的女朋友发送一个520元的红包，站在同步的角度来理解就是，你发送之后要等你的女朋友领了红包你才能去做其他的事情，站在异步的角度来理解就是，你发送红包之后马上就可">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-24T05:21:48.438Z">
+<meta property="og:updated_time" content="2019-03-24T06:05:47.237Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES6 Promise 用法浅析">
 <meta name="twitter:description" content="概念导入 同步与异步 简单来说，同步就是一次只能做一件事，等前一件做完了才能做下一件事。异步与同步相对，当一个异步过程调用发出后，调用者在没有得到结果之前，就可以继续执行后续操作。 一个愚蠢的小例子2333:比如你在使用支付宝的时候，想给你的女朋友发送一个520元的红包，站在同步的角度来理解就是，你发送之后要等你的女朋友领了红包你才能去做其他的事情，站在异步的角度来理解就是，你发送红包之后马上就可">
@@ -314,19 +314,20 @@
 <li>显而易见，作为异步编程的一种解决方案，Promise 比传统的解决方案——回调函数和事件——更合理和更强大。</li>
 </ul>
 <h2 id="Promise-的定义"><a href="#Promise-的定义" class="headerlink" title="Promise 的定义"></a>Promise 的定义</h2><ul>
-<li><p>Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。<br>它的一般表示形式为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">new Promise(</span><br><span class="line">    /* executor */</span><br><span class="line">    function(resolve, reject) &#123;</span><br><span class="line">        if (/* success */) &#123;</span><br><span class="line">            // ...执行代码</span><br><span class="line">            resolve(value);</span><br><span class="line">        &#125; else &#123; /* fail */</span><br><span class="line">            // ...执行代码</span><br><span class="line">            reject(err);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>其中，Promise中的参数executor是一个执行器函数，它有两个参数resolve和reject。resolve函数的作用是，将Promise对象的状态从“未完成”变为“成功”（，在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；reject函数的作用是，将Promise对象的状态从“未完成”变为“失败”，在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。</p>
-</li>
+<li>Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。</li>
 <li>我们可以把Promise对象看成是一条工厂的流水线，对于流水线来说，从它的工作职能上看，它只有三种状态，一个是初始状态（刚开机的时候），一个是加工产品成功，一个是加工产品失败（出现了某些故障）。同样对于Promise对象来说，它也有三种状态：<ul>
 <li><code>pending</code><br>初始状态,也称为未定状态，就是初始化Promise时，调用executor执行器函数后的状态。</li>
 <li><code>fulfilled</code><br>完成状态，意味着异步操作成功。</li>
 <li><code>rejected</code><br>失败状态，意味着异步操作失败。</li>
 </ul>
 </li>
-<li>它只有两种状态可以转化，即操作成功<code>pending -&gt; fulfilled</code>或者操作失败<code>pending -&gt; rejected</code>。并且这个状态转化是单向的，不可逆转，已经确定的状态（fulfilled/rejected）无法转回初始状态（pending）。</li>
-<li>有了Promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。此外，Promise对象提供统一的接口，使得控制异步操作更加容易。</li>
+<li><p>它只有两种状态可以转化，即操作成功<code>pending -&gt; fulfilled</code>或者操作失败<code>pending -&gt; rejected</code>。并且这个状态转化是单向的，不可逆转，已经确定的状态（fulfilled/rejected）无法转回初始状态（pending）。<br>它的一般表示形式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">new Promise(</span><br><span class="line">    /* executor */</span><br><span class="line">    function(resolve, reject) &#123;</span><br><span class="line">        if (/* success */) &#123;</span><br><span class="line">            // ...执行代码</span><br><span class="line">            resolve(value);</span><br><span class="line">        &#125; else &#123; /* fail */</span><br><span class="line">            // ...执行代码</span><br><span class="line">            reject(err);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其中，Promise中的参数executor是一个执行器函数，它有两个参数resolve和reject。resolve函数的作用是，将Promise对象的状态从“未完成”变为“成功”，在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；reject函数的作用是，将Promise对象的状态从“未完成”变为“失败”，在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。</p>
+</li>
+<li><p>有了Promise对象，就可以将异步操作以同步操作的流程表达出来，避免了层层嵌套的回调函数。此外，Promise对象提供统一的接口，使得控制异步操作更加容易。</p>
+</li>
 </ul>
 <h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><h3 id="Promise-prototype-then"><a href="#Promise-prototype-then" class="headerlink" title="Promise.prototype.then()"></a>Promise.prototype.then()</h3><p>then方法的作用是为 Promise 实例添加状态改变时的回调函数。它的第一个参数是resolved状态的回调函数，第二个参数（可选）是rejected状态的回调函数。then方法返回的是一个新的Promise实例（注意，不是原来那个Promise实例）。因此可以采用链式写法，即then方法后面再调用另一个then方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">getJSON(&quot;/posts.json&quot;).then(function(json) &#123;</span><br><span class="line">  return json.post;</span><br><span class="line">&#125;).then(function(post) &#123;</span><br><span class="line">  // ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <p>上面的代码使用then方法，依次指定了两个回调函数。第一个回调函数完成以后，会将返回结果作为参数，传入第二个回调函数。</p>
