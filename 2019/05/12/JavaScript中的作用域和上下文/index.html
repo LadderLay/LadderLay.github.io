@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Javascript,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言   函数的每次调用都有与之紧密相关的作用域和上下文。从根本上来说，作用域是基于函数的，而上下文是基于对象的。(?) 换句话说，作用域涉及到所被调用函数中的变量访问，并且不同的调用场景是不一样的。上下文始终是this关键字的值， 它是拥有（控制）当前所执行代码的对象的引用。 什么是作用域(Scope) 全局作用域 局部作用域 var的变量提升  var命令会发生“变量提升”现象（var 声明的">
+<meta name="keywords" content="Javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript中的作用域和上下文">
+<meta property="og:url" content="https://github.com/LadderLay/LadderLay.github.io/2019/05/12/JavaScript中的作用域和上下文/index.html">
+<meta property="og:site_name" content="LadderLay">
+<meta property="og:description" content="前言   函数的每次调用都有与之紧密相关的作用域和上下文。从根本上来说，作用域是基于函数的，而上下文是基于对象的。(?) 换句话说，作用域涉及到所被调用函数中的变量访问，并且不同的调用场景是不一样的。上下文始终是this关键字的值， 它是拥有（控制）当前所执行代码的对象的引用。 什么是作用域(Scope) 全局作用域 局部作用域 var的变量提升  var命令会发生“变量提升”现象（var 声明的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-11T16:35:43.480Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript中的作用域和上下文">
+<meta name="twitter:description" content="前言   函数的每次调用都有与之紧密相关的作用域和上下文。从根本上来说，作用域是基于函数的，而上下文是基于对象的。(?) 换句话说，作用域涉及到所被调用函数中的变量访问，并且不同的调用场景是不一样的。上下文始终是this关键字的值， 它是拥有（控制）当前所执行代码的对象的引用。 什么是作用域(Scope) 全局作用域 局部作用域 var的变量提升  var命令会发生“变量提升”现象（var 声明的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/LadderLay/LadderLay.github.io/2019/05/12/JavaScript中的作用域和上下文/">
+
+
+
+
+
+  <title>JavaScript中的作用域和上下文 | LadderLay</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LadderLay</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/LadderLay/LadderLay.github.io/2019/05/12/JavaScript中的作用域和上下文/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LadderLay">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LadderLay">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript中的作用域和上下文</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T00:31:08+08:00">
+                2019-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>   函数的每次调用都有与之紧密相关的作用域和上下文。<strong><em>从根本上来说，作用域是基于函数的，而上下文是基于对象的。</em></strong>(?) 换句话说，作用域涉及到所被调用函数中的变量访问，并且不同的调用场景是不一样的。上下文始终是this关键字的值， 它是拥有（控制）当前所执行代码的对象的引用。</p>
+<h1 id="什么是作用域-Scope"><a href="#什么是作用域-Scope" class="headerlink" title="什么是作用域(Scope)"></a><a href="https://www.html.cn/archives/7255" target="_blank" rel="noopener">什么是作用域(Scope)</a></h1><ul>
+<li>全局作用域</li>
+<li>局部作用域</li>
+<li><p>var的变量提升<br>  var命令会发生“变量提升”现象（var 声明的变量会在任意代码执行前处理，这意味着在任意地方声明变量都等同于在顶部声明），即变量可以在声明之前使用，值为undefined。</p>
+</li>
+<li><p>块级作用域（ES6）</p>
+</li>
+<li>var声明的变量的性质和原来一样，还是具有‘变量提升’的特性。而‘块级作用域’通过新增命令let和const来体现。</li>
+<li>let：<ul>
+<li>let声明的变量只在所处于的块级有效；</li>
+<li>let没有‘变量提升’的特性，而是‘暂时性死区（temporal dead zone）’特性。</li>
+<li>暂时性死区：ES6规定，let/const 命令会使区块形成封闭的作用域。若在声明之前使用变量，就会报错。总之，在代码块内，使用 let 命令声明变量之前，该变量都是不可用的。这在语法上，称为 <strong><em>“暂时性死区”</em></strong>（ temporal dead zone，简称 TDZ）。</li>
+</ul>
+</li>
+<li>const：<ul>
+<li>const 用于声明一个或多个常量，声明时必须进行初始化，且初始化后值不可再修改</li>
+<li><a href="http://www.fly63.com/article/detial/952" target="_blank" rel="noopener">Q：const 定义的对象属性可以改变吗</a><br>//备选：<a href="https://blog.csdn.net/qq_25643011/article/details/79426015" target="_blank" rel="noopener">https://blog.csdn.net/qq_25643011/article/details/79426015</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="什么是上下文-Contest"><a href="#什么是上下文-Contest" class="headerlink" title="什么是上下文(Contest)"></a><a href="https://github.com/creeperyang/blog/issues/16">什么是上下文(Contest)</a></h1><ul>
+<li>很多人误解为作用域(scope) 和 上下文(context) 是相同的概念。但事实并非如此。作用域(scope)我们上面已经讨论过了，而上下文(context)是用来指定代码某些特定部分中 this 的值。作用域(scope) 是指变量的可访问性，上下文(context)是指 this 在同一作用域内的值。我们也可以使用函数方法来改变上下文。<h3 id="this在具体情况下的分析"><a href="#this在具体情况下的分析" class="headerlink" title="this在具体情况下的分析"></a><a href="https://github.com/creeperyang/blog/issues/16">this在具体情况下的分析</a></h3><h4 id="Global-context"><a href="#Global-context" class="headerlink" title="Global context"></a>Global context</h4>在全局上下文（任何函数以外），<code>this</code>指向全局对象。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(this === window); // true</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Function-context"><a href="#Function-context" class="headerlink" title="Function context"></a>Function context</h4><p>在函数内部时，<code>this</code>由函数怎么调用来确定。</p>
+<ul>
+<li>简单调用(<code>this</code> - 全局对象)</li>
+<li>函数作为对象方法调用(<code>this</code>指向该对象)</li>
+<li><code>new</code>构造函数(<code>this</code>指向要被创建的新对象)</li>
+<li>apply/call 方法调用（<code>this</code> - 传入对象）</li>
+<li>bind（使用call和apply会直接执行这个函数，而bind并不会而是将绑定好的this重新返回一个新函数，什么时候调用由你自己决定。）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var a = &#123;</span><br><span class="line">    user:&quot;追梦子&quot;,</span><br><span class="line">    fn:function()&#123;</span><br><span class="line">        console.log(this.user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var b = a.fn;</span><br><span class="line">b.bind(a);</span><br><span class="line">//没有被打印</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var a = &#123;</span><br><span class="line">    user:&quot;追梦子&quot;,</span><br><span class="line">    fn:function()&#123;</span><br><span class="line">        console.log(this.user); //追梦子</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">var b = a.fn;</span><br><span class="line">var c = b.bind(a);</span><br><span class="line">c();</span><br><span class="line">//追梦子</span><br></pre></td></tr></table></figure>
+<ul>
+<li>箭头函数(唯一一个this不由调用决定的场景)<br>箭头函数不会创建自己的this,它只会从自己的作用域链的上一层继承this。因此，在下面的代码中，传递给setInterval的函数内的this与封闭函数中的this值相同</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var globalObject = this;//在全局上下文（任何函数以外），`this`指向全局对象</span><br><span class="line">var foo = (() =&gt; this);</span><br><span class="line">console.log(foo() === globalObject); // true</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function Person()&#123;</span><br><span class="line">  this.age = 0;   // `new`构造函数(`this`指向要被创建的新对象</span><br><span class="line"></span><br><span class="line">  setInterval(() =&gt; &#123;</span><br><span class="line">    this.age++; // |this| 正确地指向 p 实例</span><br><span class="line">  &#125;, 1000);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var p = new Person();</span><br></pre></td></tr></table></figure>
+<h1 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a><a href="https://www.cnblogs.com/sxhlf/p/6726976.html" target="_blank" rel="noopener">作用域链</a></h1><p><a href="https://github.com/mqyqingfeng/Blog/issues/6">JavaScript深入之作用域链 </a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Javascript/" rel="tag"># Javascript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/23/React中组件通信的几种方式/" rel="next" title="React中组件通信的几种方式">
+                <i class="fa fa-chevron-left"></i> React中组件通信的几种方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LadderLay</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是作用域-Scope"><span class="nav-number">2.</span> <span class="nav-text">什么是作用域(Scope)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是上下文-Contest"><span class="nav-number">3.</span> <span class="nav-text">什么是上下文(Contest)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#this在具体情况下的分析"><span class="nav-number">3.0.1.</span> <span class="nav-text">this在具体情况下的分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Global-context"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">Global context</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Function-context"><span class="nav-number">3.0.1.2.</span> <span class="nav-text">Function context</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#作用域链"><span class="nav-number">4.</span> <span class="nav-text">作用域链</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LadderLay</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+<!--
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
