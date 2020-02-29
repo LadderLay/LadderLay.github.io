@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="React,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="状态管理React 组件通信的几种模式Link 从组件角度看，如果你的应用有以下场景，可以考虑使用 Redux：  某个组件的状态，需要共享 某个状态需要在任何地方都可以拿到 一个组件需要改变全局状态 一个组件需要改变另一个组件的状态  状态管理我们可以想象一下现在有一个登录组件：这是一个展示用户名称、密码和一个按钮的表单组件。 我们假定这个组件有两个展示状态。一个是未登录状态，另一个是用户登录后">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React状态管理:Redux">
+<meta property="og:url" content="https://github.com/LadderLay/LadderLay.github.io/2020/02/28/React状态管理/index.html">
+<meta property="og:site_name" content="LadderLay">
+<meta property="og:description" content="状态管理React 组件通信的几种模式Link 从组件角度看，如果你的应用有以下场景，可以考虑使用 Redux：  某个组件的状态，需要共享 某个状态需要在任何地方都可以拿到 一个组件需要改变全局状态 一个组件需要改变另一个组件的状态  状态管理我们可以想象一下现在有一个登录组件：这是一个展示用户名称、密码和一个按钮的表单组件。 我们假定这个组件有两个展示状态。一个是未登录状态，另一个是用户登录后">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/4/d36079e2868d53340d02200f737a43d2?imageslim">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/4/980ca1918ae19ba5ea5ef298ac15a029?imageslim">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/11/4/0485580f95348b198956752e13d5e17c?imageslim">
+<meta property="og:image" content="https://s2.ax1x.com/2020/02/29/3sA81S.jpg">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2019/12/4/16ed0337d289e409?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:updated_time" content="2020-02-29T05:43:08.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React状态管理:Redux">
+<meta name="twitter:description" content="状态管理React 组件通信的几种模式Link 从组件角度看，如果你的应用有以下场景，可以考虑使用 Redux：  某个组件的状态，需要共享 某个状态需要在任何地方都可以拿到 一个组件需要改变全局状态 一个组件需要改变另一个组件的状态  状态管理我们可以想象一下现在有一个登录组件：这是一个展示用户名称、密码和一个按钮的表单组件。 我们假定这个组件有两个展示状态。一个是未登录状态，另一个是用户登录后">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/11/4/d36079e2868d53340d02200f737a43d2?imageslim">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/LadderLay/LadderLay.github.io/2020/02/28/React状态管理/">
+
+
+
+
+
+  <title>React状态管理:Redux | LadderLay</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LadderLay</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/LadderLay/LadderLay.github.io/2020/02/28/React状态管理/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LadderLay">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LadderLay">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React状态管理:Redux</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T01:47:44+08:00">
+                2020-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="状态管理"><a href="#状态管理" class="headerlink" title="状态管理"></a>状态管理</h2><h3 id="React-组件通信的几种模式"><a href="#React-组件通信的几种模式" class="headerlink" title="React 组件通信的几种模式"></a>React 组件通信的几种模式</h3><p><a href="https://ladderlay.github.io/2019/03/23/React%E4%B8%AD%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" target="_blank" rel="noopener">Link</a></p>
+<p>从组件角度看，如果你的应用有以下场景，可以考虑使用 Redux：</p>
+<ul>
+<li>某个组件的状态，需要共享</li>
+<li>某个状态需要在任何地方都可以拿到</li>
+<li>一个组件需要改变全局状态</li>
+<li>一个组件需要改变另一个组件的状态</li>
+</ul>
+<h3 id="状态管理-1"><a href="#状态管理-1" class="headerlink" title="状态管理"></a>状态管理</h3><p>我们可以想象一下现在有一个登录组件：这是一个展示用户名称、密码和一个按钮的表单组件。</p>
+<p>我们假定这个组件有两个展示状态。一个是未登录状态，另一个是用户登录后的状态。所以从管理这两种状态开始，我们用一个布尔值的标志位来描述用户的状态。<br><img src="https://user-gold-cdn.xitu.io/2017/11/4/d36079e2868d53340d02200f737a43d2?imageslim" alt="21"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let isLoggedIn;</span><br><span class="line">isLoggedIn = false; // 展示表单</span><br><span class="line">isLoggedIn = true; // 展示欢迎信息和链接</span><br></pre></td></tr></table></figure></p>
+<p>继续往下想，如果我们点击提交按钮后触发的HTTP请求需要一些时间来响应，我们不能把表单孤零零的放在屏幕上，而需要更多的UI元素来展示这样的中间状态，因此我们不得不在组件中引入另一个状态:<code>loading</code>状态。<br>当我们登录成功时，我们需要展示一个请求成功的信息，或者一切顺利的时候我们需要告知用户：“Yep, 你成功登录了”，并且两秒后信息伴随着华丽的动画隐藏起来，接着展示出最终的界面，要怎么办？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">if (isInProgress) &#123;</span><br><span class="line">  // 请求过程中</span><br><span class="line">&#125; else if (isLoggedIn) &#123;</span><br><span class="line">  if (isSuccessful) &#123;</span><br><span class="line">    // 展示请求成功信息</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    // 展示欢迎信息和链接</span><br><span class="line">  &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">  // 等待输入，展示表单</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们简单的状态管理一步步变成了由 if-else 组成的巨大的条件网，很难去理解和维护。<br><img src="https://user-gold-cdn.xitu.io/2017/11/4/980ca1918ae19ba5ea5ef298ac15a029?imageslim" alt="2"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">var isLoggedIn, isInProgress, isSuccessful;</span><br><span class="line"></span><br><span class="line">// 展示表单</span><br><span class="line">isLoggedIn = false;</span><br><span class="line">isInProgress = false;</span><br><span class="line">isSuccessful = false;</span><br><span class="line"></span><br><span class="line">// 请求过程中</span><br><span class="line">isLoggedIn = false;</span><br><span class="line">isInProgress = true;</span><br><span class="line">isSuccessful = false;</span><br><span class="line"></span><br><span class="line">// 展示成功状态</span><br><span class="line">isLoggedIn = true;</span><br><span class="line">isInProgress = false;</span><br><span class="line">isSuccessful = true;</span><br><span class="line"></span><br><span class="line">// 展示欢迎信息和链接</span><br><span class="line">isLoggedIn = true;</span><br><span class="line">isInProgress = false;</span><br><span class="line">isSuccessful = false;</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/11/4/0485580f95348b198956752e13d5e17c?imageslim" alt="3"></p>
+<h2 id="Redux机制"><a href="#Redux机制" class="headerlink" title="Redux机制"></a>Redux机制</h2><h3 id="什么是Redux"><a href="#什么是Redux" class="headerlink" title="什么是Redux"></a>什么是Redux</h3><p>Redux是一个流行的JavaScript框架，<strong>为应用程序提供一个可预测的状态容器</strong>。<br>只使用React，每个组件都可以有一个state，每个组件各自管理各自的state，当组件变多时或者组件之间的通信复杂时，这种分散的状态管理方式就很不方便。Redux将所有组件的state维护成一个全局的state，保存到store里，然后通过dispatch这套状态更新流程，来规范化全局state的修改，每个组件需要用到哪些状态，就从全局的state中取出对应的状态使用。各个组件不再管理自身的state，统一交给Redux管理。</p>
+<h3 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h3><ul>
+<li>Web 应用是一个状态机，视图（<strong>View</strong>）与状态（<strong>State</strong>）是一一对应的。</li>
+<li>所有的状态，保存在一个对象（<strong>Store</strong>）里面。</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2020/02/29/3sA81S.jpg" alt="1"><br>首先可以看到这张图，我们可以非常直观的发现,<br>Redux 严格限制了数据只能在一个方向上流动——<strong>单向数据流</strong><br>Redux 的基本做法：用户发出 Action，Reducer 函数算出新的 State，View 重新渲染</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><h4 id="state"><a href="#state" class="headerlink" title="state"></a>state</h4><p>在理解<code>redux</code>之前，首先应该理解<code>state</code>是什么。</p>
+<p>譬如这样一个普通的<strong>有状态的 React 组件</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import React, &#123; Component &#125; from &quot;react&quot;;</span><br><span class="line">class ExampleComponent extends Component &#123;</span><br><span class="line">  constructor() &#123;</span><br><span class="line">    super();</span><br><span class="line">    this.state = &#123;</span><br><span class="line">      articles: [</span><br><span class="line">        &#123; title: &quot;React Tutorial&quot;, id: 1 &#125;,</span><br><span class="line">        &#123; title: &quot;Redux&quot;, id: 2 &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    const &#123; articles &#125; = this.state;</span><br><span class="line">    return &lt;ul&gt;&#123;articles.map(el =&gt; &lt;li key=&#123;el.id&#125;&gt;&#123;el.title&#125;&lt;/li&gt;)&#125;&lt;/ul&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>状态<code>state</code>管理数据，组件渲染数据并展示给用户.同时状态在响应行为和事件的时候可能会发生变化，在React中，组件可以通过<code>setState</code>更新自己的状态.</p>
+<h4 id="store"><a href="#store" class="headerlink" title="store"></a>store</h4><ul>
+<li><p>createStore<br>Redux 提供<code>createStore</code>这个函数，用来生成 Store。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createStore &#125; from &apos;redux&apos;;</span><br><span class="line">const store = createStore(fn);</span><br><span class="line">//在这份代码中，createStore函数接受另一个函数（reducer）作为参数，返回新生成的 Store 对象</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>store.getState()<br>Store对象包含所有数据，如果想得到某个时点的数据，就要对 Store 生成快照。这种时点的数据集合，就叫做 State。<br>当前时刻的 State，可以通过<code>store.getState()</code>拿到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createStore &#125; from &apos;redux&apos;;</span><br><span class="line">const store = createStore(fn);</span><br><span class="line"></span><br><span class="line">const state = store.getState();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>store.dispatch()<br>这是是 View 发出 Action 的唯一方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(addTodo(&apos;Learn Redux&apos;));</span><br><span class="line">//Action Creator 生成一个 Action对象，而 store.dispatch 接受这个生成的 Action 对象作为参数，将它发送出去</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>store.subscribe()</p>
+<h4 id="action"><a href="#action" class="headerlink" title="action"></a>action</h4><p>Action 是一个对象。其中的type属性是必须的，表示 Action 的名称.<br>如下所示的代码中，Action 的名称是ADD_TODO，它携带的信息是字符串Learn Redux。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const action = &#123;</span><br><span class="line">  type: &apos;ADD_TODO&apos;,</span><br><span class="line">  payload: &apos;Learn Redux&apos;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以这样理解，Action 描述当前发生的事情。改变 State 的唯一办法，就是使用 Action。它会运送数据到 Store。</p>
+<ul>
+<li>Action Creator<br>当我们想要发送不同信息时，我们可以借助定义一个函数来生成 Action，如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const ADD_TODO = &apos;添加 TODO&apos;;</span><br><span class="line"></span><br><span class="line">function addTodo(text) &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    type: ADD_TODO,</span><br><span class="line">    text</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const action = addTodo(&apos;Learn Redux&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这个函数(addTodo)就叫做<code>Action Creator</code></p>
+<h4 id="reducer"><a href="#reducer" class="headerlink" title="reducer"></a>reducer</h4><p>Store 收到 Action 以后，必须给出一个新的 State，这样 View 才会发生变化。这种 State 的计算过程就叫做 Reducer。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const reducer = function (state, action) &#123;</span><br><span class="line">  // ...</span><br><span class="line">  return new_state;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>看下面这个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">const defaultState = 0;</span><br><span class="line">const reducer = (state = defaultState, action) =&gt; &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case &apos;ADD&apos;:</span><br><span class="line">      return state + action.payload;</span><br><span class="line">    default: </span><br><span class="line">      return state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const state = reducer(1, &#123;</span><br><span class="line">  type: &apos;ADD&apos;,</span><br><span class="line">  payload: 2</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>上面代码中，reducer函数收到名为ADD的 Action 以后，就返回一个新的 State，作为加法的计算结果。其他运算的逻辑（比如减法），也可以根据 Action 的不同来实现。<br>当然，我们刚刚介绍了 <code>store.dispatch()</code>，实际应用中，Reducer 函数不用像上面这样手动调用，store.dispatch方法会触发 Reducer 的自动执行.</p>
+<p>为此，Store 需要知道 Reducer 函数，做法就是在生成 Store 的时候，将 Reducer 传入createStore方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createStore &#125; from &apos;redux&apos;;</span><br><span class="line">const store = createStore(reducer);</span><br><span class="line"></span><br><span class="line">//createStore接受 Reducer 作为参数，生成一个新的 Store。</span><br><span class="line">//以后每当store.dispatch发送过来一个新的 Action，就会自动调用 Reducer，得到新的 State。</span><br></pre></td></tr></table></figure></p>
+<h3 id="Redux-三大原则"><a href="#Redux-三大原则" class="headerlink" title="Redux 三大原则"></a>Redux 三大原则</h3><ul>
+<li>单一数据源<br>整个应用的 state 被储存在一棵 object tree 中，并且这个 object tree 只存在于唯一一个 store 中。</li>
+<li>State 是只读的<br>唯一改变 state 的方法就是触发 action，action 是一个用于描述已发生事件的普通对象。<br>这也是为什么 Reducer 必须是一个纯函数</li>
+<li><p>使用纯函数来执行修改<br>Reducer只是一些纯函数，它接收先前的state和action，并返回新的state。</p>
+<blockquote>
+<p>【纯函数】</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 不纯的</span><br><span class="line">var minimum = 21;</span><br><span class="line">var checkAge = function(age) &#123;</span><br><span class="line">return age &gt;= minimum;</span><br><span class="line">&#125;;</span><br><span class="line">// 纯的</span><br><span class="line">var checkAge = function(age) &#123;</span><br><span class="line">var minimum = 21;</span><br><span class="line">return age &gt;= minimum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//在不纯的版本中，checkAge 的结果将取决于 minimum 这个可变变量的值。换句话说，它取决于系统状态（system state）；</span><br><span class="line">//纯函数是这样一种函数，即相同的输入，永远会得到相同的输出，而且没有任何可观察的副作用。</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>  Redux设计：<br>  Redux只通过比较新旧两个对象的存储位置来比较新旧两个对象是否相同<br>  （译者注：也就是Javascript对象浅比较）。<br>  如果你在reducer内部直接修改旧的state对象的属性值，那么新的state和旧的state将都指向同一个对象。<br>  因此Redux认为没有任何改变，返回的state将为旧的state。</p>
+<blockquote>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// src/js/reducers/index.js</span><br><span class="line">import &#123; ADD_ARTICLE &#125; from &quot;../constants/action-types&quot;;</span><br><span class="line">const initialState = &#123;</span><br><span class="line">  articles: []</span><br><span class="line">&#125;;</span><br><span class="line">function rootReducer(state = initialState, action) &#123;</span><br><span class="line">  if (action.type === ADD_ARTICLE) &#123;</span><br><span class="line">    state.articles.push(action.payload);</span><br><span class="line">  &#125;</span><br><span class="line">  return state;</span><br><span class="line">&#125;</span><br><span class="line">export default rootReducer;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#123; ADD_ARTICLE &#125; from &quot;../constants/action-types&quot;;</span><br><span class="line">const initialState = &#123;</span><br><span class="line">  articles: []</span><br><span class="line">&#125;;</span><br><span class="line">function rootReducer(state = initialState, action) &#123;</span><br><span class="line">  if (action.type === ADD_ARTICLE) &#123;</span><br><span class="line">    return Object.assign(&#123;&#125;, state, &#123;</span><br><span class="line">      articles: state.articles.concat(action.payload)</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  return state;</span><br><span class="line">&#125;</span><br><span class="line">export default rootReducer;</span><br></pre></td></tr></table></figure>
+<h4 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h4><p><img src="https://user-gold-cdn.xitu.io/2019/12/4/16ed0337d289e409?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="33"><br>Redux严格限制了数据只能在一个方向上流动。<br>在<code>Redux</code>中，所有的数据（比如state）被保存在一个被称为<code>store</code>的容器中(在一个应用程序中只能有一个)。store本质上是一个<strong>状态树</strong>，保存了所有对象的状态。任何UI组件都可以直接从store访问特定对象的状态。要通过本地或远程组件更改状态，需要分发一个action。分发在这里意味着将可执行信息发送到store。当一个store接收到一个action，它将把这个action代理给相关的reducer。reducer是一个<strong>纯函数</strong>，它可以查看之前的状态，执行一个action并且返回一个新的状态。</p>
+<p>形象化地比喻为我要去图书管借书这件事：</p>
+<ul>
+<li>ActionCreators 创造出一条语句：我要借什么书？（Action）</li>
+<li>图书管理员(store)接收了我的请求(dispatch(action对象))</li>
+<li>图书管理员将请求(previousState,action)输入到电脑的记录本 (Reducers)，记录本记录完后，就返回新的记录</li>
+<li>图书管理员(store)于是给了我(React Component)书(state)</li>
+</ul>
+<h2 id="dva"><a href="#dva" class="headerlink" title="dva"></a>dva</h2><h2 id="tip"><a href="#tip" class="headerlink" title="tip"></a>tip</h2><ul>
+<li>函数式编程：纯函数、不变性</li>
+<li><code>Redux</code>三大原则</li>
+<li>Redux的dispatch action机制和React本身的setState有什么区别？</li>
+</ul>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/14/浅拷贝与深拷贝/" rel="next" title="浅拷贝与深拷贝">
+                <i class="fa fa-chevron-left"></i> 浅拷贝与深拷贝
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LadderLay</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#状态管理"><span class="nav-number">1.</span> <span class="nav-text">状态管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#React-组件通信的几种模式"><span class="nav-number">1.1.</span> <span class="nav-text">React 组件通信的几种模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态管理-1"><span class="nav-number">1.2.</span> <span class="nav-text">状态管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux机制"><span class="nav-number">2.</span> <span class="nav-text">Redux机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Redux"><span class="nav-number">2.1.</span> <span class="nav-text">什么是Redux</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计思想"><span class="nav-number">2.2.</span> <span class="nav-text">设计思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">2.3.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#state"><span class="nav-number">2.3.1.</span> <span class="nav-text">state</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#store"><span class="nav-number">2.3.2.</span> <span class="nav-text">store</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#action"><span class="nav-number">2.3.3.</span> <span class="nav-text">action</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#reducer"><span class="nav-number">2.3.4.</span> <span class="nav-text">reducer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redux-三大原则"><span class="nav-number">2.4.</span> <span class="nav-text">Redux 三大原则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工作流程"><span class="nav-number">2.4.1.</span> <span class="nav-text">工作流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dva"><span class="nav-number">3.</span> <span class="nav-text">dva</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tip"><span class="nav-number">4.</span> <span class="nav-text">tip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LadderLay</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+<!--
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+-->
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
